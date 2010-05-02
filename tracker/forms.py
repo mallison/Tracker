@@ -4,9 +4,11 @@ import models
 
 
 class ProjectTaskForm(forms.Form):
-    project = forms.ModelChoiceField(queryset=models.Project.objects.all())
+    project = forms.ModelChoiceField(
+        queryset=models.Project.objects.order_by('name'))
     task = forms.ModelChoiceField(
-        queryset=models.Task.objects.filter(finished=False),
+        queryset=models.Task.objects.filter(finished=False).
+                     order_by('project__name', 'name'),
         required=False)
     new_task = forms.CharField(required=False)
 
