@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 
@@ -17,7 +19,10 @@ class Task(models.Model):
         return u'%s: %s' % (self.project.name, self.name)
 
     def cumulative_time(self):
-        return sum([s.end - s.start for s in self.timeslots.all()])
+        time = 0
+        for chunk in self.timeslots.filter(end__isnull=False):
+            time += chunk.duration()
+        return time
 
 
 class Timeslot(models.Model):
@@ -27,7 +32,14 @@ class Timeslot(models.Model):
     notes = models.TextField()
 
     def __unicode__(self):
-        return u'%s: %s' % (self.task.name, end - start)
+        return u'%s: %s' % (self.task.name, self.duration())
     
+    def finish(self):
+        self.end = datetime.datetime.now()
+        self.save()
+
     def ordinal(self):
         return self.task.timeslots.filter(start__lte=self.start).count()
+
+    def duration(self):
+        return self.end and (self.end - self.start).seconds / 60

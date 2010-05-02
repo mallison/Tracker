@@ -28,12 +28,32 @@ def tracker(request, timeslot_id):
             timeslot.save()
             return HttpResponseRedirect(reverse('tracker-track',
                                                 args=(timeslot.pk,)))
-        if request.POST.has_key('new') and notes_form.is_valid():
+        elif request.POST.has_key('new') and notes_form.is_valid():
             timeslot.notes = notes_form.cleaned_data['notes']
-            timeslot.save()
+            timeslot.finish()
             new_timeslot = models.Timeslot.objects.create(
                 start=datetime.datetime.now(),
                 task=timeslot.task)
+            return HttpResponseRedirect(reverse('tracker-track',
+                                                args=(new_timeslot.pk,)))
+        elif request.POST.has_key('stop') and notes_form.is_valid():
+            timeslot.notes = notes_form.cleaned_data['notes']
+            timeslot.finish()
+            misc_task = models.Task.objects.get(name='misc')
+            new_timeslot = models.Timeslot.objects.create(
+                start=datetime.datetime.now(),
+                task=misc_task)
+            return HttpResponseRedirect(reverse('tracker-track',
+                                                args=(new_timeslot.pk,)))
+        elif request.POST.has_key('finish') and notes_form.is_valid():
+            timeslot.notes = notes_form.cleaned_data['notes']
+            timeslot.finish()
+            timeslot.task.finished = True
+            timeslow.task.save()
+            misc_task = models.Task.objects.get(name='misc')
+            new_timeslot = models.Timeslot.objects.create(
+                start=datetime.datetime.now(),
+                task=misc.task)
             return HttpResponseRedirect(reverse('tracker-track',
                                                 args=(new_timeslot.pk,)))
         elif (request.POST.has_key('switch') and 
@@ -51,10 +71,12 @@ def tracker(request, timeslot_id):
     else:
         task_form = forms.ProjectTaskForm()
         notes_form = forms.TimeslotNotesForm(initial={'notes': timeslot.notes})
+    print timeslot.task.cumulative_time()
     return render_to_response(
         'tracker/tracker.html',
         {'task_form': task_form,
          'timeslot': timeslot,
-         'timeslots': models.Timeslot.objects.order_by('-start'),
-         'notes_form': notes_form},
-        )
+         'timeslots': models.Timeslot.objects.
+             exclude(pk=timeslot.pk).
+             order_by('-start'),
+         'notes_form': notes_form})

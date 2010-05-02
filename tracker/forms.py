@@ -11,9 +11,9 @@ class ProjectTaskForm(forms.Form):
         project = self.cleaned_data.get('project')
         task = self.cleaned_data.get('task')
         if project and task and task.project != project:
-            raise forms.ValidationErro("Task is not valid for project")
+            raise forms.ValidationError("Task is not valid for project")
         return self.cleaned_data
 
 
 class TimeslotNotesForm(forms.Form):
-    notes = forms.CharField(widget=forms.Textarea)
+    notes = forms.CharField(widget=forms.Textarea, required=False)
