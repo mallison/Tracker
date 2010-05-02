@@ -15,5 +15,5 @@ class ProjectTaskForm(forms.Form):
         return self.cleaned_data
 
 
-class TimeslotNotesForm(forms.Form):
+class ChunkNotesForm(forms.Form):
     notes = forms.CharField(widget=forms.Textarea, required=False)

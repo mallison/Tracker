@@ -1,15 +1,15 @@
 {% extends "tracker/base.html" %}
 {% block content %}
-{% with timeslot.task as task %}
-    <h1>Tracker: {{ task.project.name }} &rarr; {{ task.name }} &rarr; chunk {{ timeslot.ordinal }}</h1>
+{% with chunk.task as task %}
+    <h1>Tracker: {{ task.project.name }} &rarr; {{ task.name }} &rarr; chunk {{ chunk.ordinal }}</h1>
 {% endwith %}
 <table>
     <tr>
         <td>
             <form method="post" action=".">
                 <!-- TODO refresh timesince dynamically -->
-                <p>Task time: {{ timeslot.task.cumulative_time }} minutes</p>
-                <p>This chunk: {{ timeslot.start|timesince }}</p>
+                <p>Task time: {{ chunk.task.cumulative_time }} minutes</p>
+                <p>This chunk: {{ chunk.start|timesince }}</p>
                 {{ notes_form.as_p }}
                 <input type="submit" name="save" value="save chunk"> |
                 <input type="submit" name="new" value="new chunk"> |
@@ -19,10 +19,10 @@
             </form>
         </td>
         <td valign="top">
-            {% for timeslot in timeslots %}
+            {% for chunk in chunks %}
                 <dl>
-                    <dt>{{ timeslot.task.project.name }} &rarr; {{ timeslot.task.name }} &rarr; {{ timeslot.ordinal }}: {{ timeslot.duration }} minutes</dt>
-                    <dl><pre>{{ timeslot.notes }}</pre></dl>
+                    <dt>{{ chunk.task.project.name }} &rarr; {{ chunk.task.name }} &rarr; {{ chunk.ordinal }}: {{ chunk.duration }} minutes</dt>
+                    <dl><pre>{{ chunk.notes }}</pre></dl>
                 </dl>
             {% endfor %}
         </td>

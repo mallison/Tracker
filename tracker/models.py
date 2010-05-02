@@ -20,13 +20,13 @@ class Task(models.Model):
 
     def cumulative_time(self):
         time = 0
-        for chunk in self.timeslots.filter(end__isnull=False):
+        for chunk in self.chunks.filter(end__isnull=False):
             time += chunk.duration()
         return time
 
 
-class Timeslot(models.Model):
-    task = models.ForeignKey(Task, related_name="timeslots")
+class Chunk(models.Model):
+    task = models.ForeignKey(Task, related_name="chunks")
     start = models.DateTimeField()
     end = models.DateTimeField(null=True, blank=True)
     notes = models.TextField()
@@ -39,7 +39,7 @@ class Timeslot(models.Model):
         self.save()
 
     def ordinal(self):
-        return self.task.timeslots.filter(start__lte=self.start).count()
+        return self.task.chunks.filter(start__lte=self.start).count()
 
     def duration(self):
         return self.end and (self.end - self.start).seconds / 60
