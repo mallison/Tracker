@@ -16,7 +16,7 @@
                 <input type="submit" name="stop" value="stop task"> |
                 <input type="submit" name="finish" value="finish task">
                 {% if task_form.errors %}{{ task_form.errors }}{% endif %}
-                <p>switch to: {% for field in task_form %}{{ field.label_tag }} {{ field }} {% endfor %}<input type="submit" name="switch" value="go"></p>
+                <p>switch to: {% for field in task_form %}{% ifequal forloop.counter 2 %}<div id="task_picker">{% endifequal %}{{ field.label_tag }} {{ field }} {% endfor %}<input type="submit" name="switch" value="go"></div></p>
             </form>
         </td>
         <td valign="top">
@@ -33,8 +33,30 @@
 $(function () {
     var chunk_time = $('#chunk_time');
     var start_time = new Date;
-    var one_minute = 60000  // milliseconds
+    var one_minute = 60000  // milliseconds 
+    var task_picker = $('#task_picker');
+    var project_picker = $('#id_project');
+    var current_task_picker = $('#id_task');
 
+    // events
+    project_picker.change(function () {
+        var project = $(this).val();
+        if (!project) {
+            task_picker.hide();
+        } else {
+            current_task_picker.find('option').each(function () {
+                var option = $(this);
+                if (option.val().split(':')[0] === project) {
+                    option.show();
+                } else {
+                    option.hide();
+                }
+            });
+            task_picker.show();
+        }
+    });    
+
+    // utility functions
     var update_chunk_time = function () {
         var now = new Date;
         var elapsed = Math.round((now - start_time) / one_minute);
@@ -42,8 +64,10 @@ $(function () {
     }
 
     var init = function () {
+        task_picker.hide();
         update_chunk_time();
         setInterval(update_chunk_time, one_minute);
+       
     }();
 })
 </script>
