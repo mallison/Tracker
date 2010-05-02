@@ -32,7 +32,7 @@
 <script>
 $(function () {
     var chunk_time = $('#chunk_time');
-    var start_time = new Date;
+    var start_time = new Date({{ js_time }});
     var one_minute = 60000  // milliseconds 
     var task_picker = $('#task_picker');
     var project_picker = $('#id_project');

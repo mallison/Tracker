@@ -1,4 +1,5 @@
 import datetime
+import time
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -81,7 +82,7 @@ def tracker(request, chunk_id):
     else:
         task_form = forms.ProjectTaskForm()
         notes_form = forms.ChunkNotesForm(initial={'notes': chunk.notes})
-    print chunk.task.cumulative_time()
+    js_time = time.mktime(chunk.start.timetuple()) * 1000
     return render_to_response(
         'tracker/tracker.html',
         {'task_form': task_form,
@@ -89,4 +90,5 @@ def tracker(request, chunk_id):
          'chunks': models.Chunk.objects.
              exclude(pk=chunk.pk).
              order_by('-start'),
+         'js_time': js_time,
          'notes_form': notes_form})
