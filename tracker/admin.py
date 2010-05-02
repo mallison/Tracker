@@ -7,4 +7,4 @@ class TaskInline(admin.TabularInline):
 
 admin.site.register(models.Project,
                     inlines=(TaskInline,))
-#admin.site.register(models.Task)
+admin.site.register(models.Task)

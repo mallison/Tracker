@@ -3,7 +3,7 @@
 {% with chunk.task as task %}
     <h1>Tracker: {{ task.project.name }} &rarr; {{ task.name }} &rarr; chunk {{ chunk.ordinal }}</h1>
 {% endwith %}
-<table>
+<table width="100%">
     <tr>
         <td valign="top">
             <form method="post" action=".">
@@ -19,7 +19,7 @@
                 <p>switch to: {% for field in task_form %}{% ifequal forloop.counter 2 %}<div id="task_picker">{% endifequal %}{{ field.label_tag }} {{ field }} {% endfor %}<input type="submit" name="switch" value="go"></div></p>
             </form>
         </td>
-        <td valign="top">
+        <td valign="top" width="25%"x>
             {% for chunk in chunks %}
                 <dl>
                     <dt>{{ chunk.task.project.name }} &rarr; {{ chunk.task.name }} &rarr; {{ chunk.ordinal }}: {{ chunk.duration }} minutes</dt>
