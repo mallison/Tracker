@@ -1,0 +1,24 @@
+{% extends "tracker/base.html" %}
+{% block content %}
+<form method="post" action=".">
+    {% with timeslot.task as task %}
+        <h1>Tracker: {{ task.project.name }} &rarr; {{ task.name }} &rarr; chunk {{ timeslot.ordinal }}</h1>
+    {% endwith %}
+    <!-- TODO refresh timesince dynamically -->
+    <p>Task time: {{ timeslot.task.cumulative_time }}</p>
+    <p>{{ timeslot.start|timesince }}</p>
+    {{ notes_form.as_p }}
+    <input type="submit" name="save" value="save chunk"> |
+    <input type="submit" name="new" value="new chunk"> |
+    <input type="submit" name="stop" value="stop task"> |
+    <input type="submit" name="finish" value="finish task">
+    <p>switch to: {% for field in task_form %}{{ field.label_tag }} {{ field }} {% endfor %} or <label for="id_new_task">new task: </label><input type="text" name="new_task" id="id_new_task"> <input type="submit" name="switch" value="go"></p>
+    <hr>
+    {% for timeslot in timeslots %}
+        <dl>
+            <dt>{{ timeslot.task.project.name }} &rarr; {{ timeslot.task.name }} &rarr; {{ timeslot.ordinal }}</dt>
+            <dl><pre>{{ timeslot.notes }}</pre></dl>
+        </dl>
+    {% endfor %}
+</form>
+{% endblock %}

@@ -1,0 +1,1 @@
+[{"pk": 1, "model": "tracker.project", "fields": {"name": "Tracker"}}, {"pk": 2, "model": "tracker.project", "fields": {"name": "misc"}}, {"pk": 1, "model": "tracker.task", "fields": {"project": 1, "name": "Bootstrap django project"}}, {"pk": 2, "model": "tracker.task", "fields": {"project": 2, "name": "misc"}}]
