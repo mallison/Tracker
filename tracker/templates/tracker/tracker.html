@@ -9,7 +9,7 @@
             <form method="post" action=".">
                 <!-- TODO refresh timesince dynamically -->
                 <p>Task time: {{ chunk.task.cumulative_time }} minutes</p>
-                <p>This chunk: {{ chunk.start|timesince }}</p>
+                <p>This chunk: <span id="chunk_time">{{ chunk.start|timesince }}</span> minutes</p>
                 {{ notes_form.as_p }}
                 <input type="submit" name="save" value="save chunk"> |
                 <input type="submit" name="new" value="new chunk"> |
@@ -28,4 +28,23 @@
             {% endfor %}
         </td>
     </tr>
+</table>
+<script>
+$(function () {
+    var chunk_time = $('#chunk_time');
+    var start_time = new Date;
+    var one_minute = 60000  // milliseconds
+
+    var update_chunk_time = function () {
+        var now = new Date;
+        var elapsed = Math.round((now - start_time) / one_minute);
+        chunk_time.text(elapsed);
+    }
+
+    var init = function () {
+        update_chunk_time();
+        setInterval(update_chunk_time, one_minute);
+    }();
+})
+</script>
 {% endblock %}
