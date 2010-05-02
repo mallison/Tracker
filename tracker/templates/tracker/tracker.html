@@ -40,13 +40,13 @@ $(function () {
 
     // events
     project_picker.change(function () {
-        var project = $(this).val();
+        var project = $(this).find('option:selected').text();
         if (!project) {
             task_picker.hide();
         } else {
             current_task_picker.find('option').each(function () {
                 var option = $(this);
-                if (option.val().split(':')[0] === project) {
+                if (option.text().split(':')[0] === project) {
                     option.show();
                 } else {
                     option.hide();
