@@ -39,7 +39,8 @@ def tracker(request, chunk_id):
         elif request.POST.has_key('stop') and notes_form.is_valid():
             chunk.notes = notes_form.cleaned_data['notes']
             chunk.finish()
-            misc_task = models.Task.objects.get(name='misc')
+            misc_task = models.Task.objects.get(project__name='misc',
+                                                name='misc')
             new_chunk = models.Chunk.objects.create(
                 start=datetime.datetime.now(),
                 task=misc_task)
@@ -49,11 +50,12 @@ def tracker(request, chunk_id):
             chunk.notes = notes_form.cleaned_data['notes']
             chunk.finish()
             chunk.task.finished = True
-            timeslow.task.save()
-            misc_task = models.Task.objects.get(name='misc')
+            chunk.task.save()
+            misc_task = models.Task.objects.get(project__name='misc',
+                                                name='misc')
             new_chunk = models.Chunk.objects.create(
                 start=datetime.datetime.now(),
-                task=misc.task)
+                task=misc_task)
             return HttpResponseRedirect(reverse('tracker-track',
                                                 args=(new_chunk.pk,)))
         elif (request.POST.has_key('switch') and 
@@ -62,7 +64,15 @@ def tracker(request, chunk_id):
             chunk.notes = notes_form.cleaned_data['notes']
             chunk.end = datetime.datetime.now()
             chunk.save()
-            new_task = task_form.cleaned_data['task']
+            if task_form.cleaned_data['new_task']:
+                new_task = models.Task.objects.create(
+                    project=task_form.cleaned_data['project'],
+                    name=task_form.cleaned_data['new_task'])
+            elif task_form.cleaned_data['task']:
+                new_task = task_form.cleaned_data['task']
+            else:
+                new_task = task_form.cleaned_data['project'].tasks.get(
+                    name='misc')
             new_chunk = models.Chunk.objects.create(
                 start=datetime.datetime.now(),
                 task=new_task)

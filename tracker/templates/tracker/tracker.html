@@ -5,7 +5,7 @@
 {% endwith %}
 <table>
     <tr>
-        <td>
+        <td valign="top">
             <form method="post" action=".">
                 <!-- TODO refresh timesince dynamically -->
                 <p>Task time: {{ chunk.task.cumulative_time }} minutes</p>
@@ -15,7 +15,8 @@
                 <input type="submit" name="new" value="new chunk"> |
                 <input type="submit" name="stop" value="stop task"> |
                 <input type="submit" name="finish" value="finish task">
-                <p>switch to: {% for field in task_form %}{{ field.label_tag }} {{ field }} {% endfor %} or <label for="id_new_task">new task: </label><input type="text" name="new_task" id="id_new_task"> <input type="submit" name="switch" value="go"></p>
+                {% if task_form.errors %}{{ task_form.errors }}{% endif %}
+                <p>switch to: {% for field in task_form %}{{ field.label_tag }} {{ field }} {% endfor %}<input type="submit" name="switch" value="go"></p>
             </form>
         </td>
         <td valign="top">

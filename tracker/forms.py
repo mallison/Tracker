@@ -5,7 +5,10 @@ import models
 
 class ProjectTaskForm(forms.Form):
     project = forms.ModelChoiceField(queryset=models.Project.objects.all())
-    task = forms.ModelChoiceField(queryset=models.Task.objects.filter(finished=False))
+    task = forms.ModelChoiceField(
+        queryset=models.Task.objects.filter(finished=False),
+        required=False)
+    new_task = forms.CharField(required=False)
 
     def clean(self):
         project = self.cleaned_data.get('project')
